@@ -1,8 +1,3 @@
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.AWSCredentialsProvider;
-import com.amazonaws.regions.Regions;
-import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
-import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClientBuilder;
 import com.amazonaws.services.simpleemail.model.RawMessage;
 import com.amazonaws.services.simpleemail.model.SendRawEmailRequest;
 
@@ -12,47 +7,92 @@ import javax.activation.FileDataSource;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
-import javax.mail.internet.*;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.ByteBuffer;
 import java.util.Properties;
 
-// JavaMail libraries. Download the JavaMail API
-// from https://javaee.github.io/javamail/
-// AWS SDK libraries. Download the AWS SDK for Java
-// from https://aws.amazon.com/sdk-for-java
-
-public class AmazonSESExample {
+public class SESPort {
 
     // Replace sender@example.com with your "From" address.
-    // This address must be verified with Amazon SES.
-    private static String SENDER = "bhargava.k@study42.com";
+    // This address must be verified.
+    static final String FROM = "admin@capitalfloat.com";
+    static final String FROMNAME = "Capital Float";
 
     // Replace recipient@example.com with a "To" address. If your account
     // is still in the sandbox, this address must be verified.
+    static final String TO = "eartherk5yb@gmail.com";
+
+    // Replace smtp_username with your Amazon SES SMTP user name.
+    static final String SMTP_USERNAME = "AKIAJ53XE6UORIIJ45GQ";
+
+    // Replace smtp_password with your Amazon SES SMTP password.
+    static final String SMTP_PASSWORD = "AgCtlPa5souHnHQc9j548UPJGke0mcgfiKp1x4GwlWkw";
+    // The name of the Configuration Set to use for this message.
+    // If you comment out or remove this variable, you will also need to
+    // comment out or remove the header below.
+    static final String CONFIGSET = "ConfigSet";
+    // Amazon SES SMTP host name. This example uses the US West (Oregon) region.
+    // See https://docs.aws.amazon.com/ses/latest/DeveloperGuide/regions.html#region-endpoints
+    // for more information.
+    static final String HOST = "email-smtp.us-west-2.amazonaws.com";
+    // The port you will connect to on the Amazon SES SMTP endpoint.
+    static final int PORT = 587;
     private static String RECIPIENT_TO = "bhargava.k@capitalfloat.com";
     private static String RECIPIENT_CC = "bhargavak37@gmail.com";
-
     // Specify a configuration set. If you do not want to use a configuration
     // set, comment the following variable, and the
     // ConfigurationSetName=CONFIGURATION_SET argument below.
     private static String CONFIGURATION_SET = "ConfigSet";
-
     // The subject line for the email.
     private static String SUBJECT = "IndusInd UCIC and Promoters Files";
-
     // The full path to the file that will be attached to the email.
     // If you're using Windows, escape backslashes as shown in this variable.
     private static String ATTACHMENT = "/home/bhargava/doc_section/dwtasks/1018695p.TXT";
     private static String ATTACHMENT1 = "/home/bhargava/doc_section/dwtasks/1018695.TXT";
-    // The email body for recipients with non-HTML email clients.
+    private static String SENDER = "bhargava.k@study42.com";
     private static String BODY_TEXT = "Hello,\r\n"
             + "Please see the attached UCIC and Promoters file ";
 
+//    static final String SUBJECT = "Amazon SES test (SMTP interface accessed using Java)";
 
-    public static void main(String[] args) throws AddressException, MessagingException, IOException {
+//    static final String BODY = String.join(
+//            System.getProperty("line.separator"),
+//            "<h1>Amazon SES SMTP Email Test</h1>",
+//            "<p>This email was sent with Amazon SES using the ",
+//            "<a href='https://github.com/javaee/javamail'>Javamail Package</a>",
+//            " for <a href='https://www.java.com'>Java</a>."
+//    );
+
+    public static void main(String[] args) throws Exception {
+
+        // Create a Properties object to contain connection configuration information.
+        Properties props = System.getProperties();
+        props.put("mail.transport.protocol", "smtp");
+        props.put("mail.smtp.port", PORT);
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.auth", "true");
+
+        // Create a Session object to represent a mail session with the specified properties.
+//        Session session = Session.getDefaultInstance(props);
+//
+//        // Create a message with the specified information.
+//        MimeMessage msg = new MimeMessage(session);
+//        msg.setFrom(new InternetAddress(FROM,FROMNAME));
+//        msg.setRecipient(Message.RecipientType.TO, new InternetAddress(TO));
+//        msg.setSubject(SUBJECT);
+//        msg.setContent(BODY,"text/html");
+
+        // Add a configuration set header. Comment or delete the
+        // next line if you are not using a configuration set
+        // msg.setHeader("X-SES-CONFIGURATION-SET", CONFIGSET);
+
+        // Create a transport.
         ByteArrayOutputStream outputStream = null;
         Session session = Session.getDefaultInstance(new Properties());
 
@@ -61,7 +101,7 @@ public class AmazonSESExample {
 
         // Add subject, from and to lines.
         message.setSubject(SUBJECT, "UTF-8");
-        message.setFrom(new InternetAddress(SENDER));
+        message.setFrom(new InternetAddress(FROM));
         setReceipientsTO(RECIPIENT_TO, message);
         setReceipientsCC(RECIPIENT_CC, message);
         // message.addRecipients(Message.RecipientType.CC, InternetAddress.parse("deepthi.meduri@capitalfloat.com"));
@@ -102,62 +142,41 @@ public class AmazonSESExample {
         // Add the attachment to the message.
         msg.addBodyPart(attachFile(ATTACHMENT));
         msg.addBodyPart(attachFile(ATTACHMENT1));
+        Transport transport = session.getTransport();
+        // Replace US_WEST_2 with the AWS Region you're using for
+        // Amazon SES.
 
 
-        // Try to send the email.
+        // Print the raw email content on the console
+        PrintStream out = System.out;
+        message.writeTo(out);
+
+        // Send the email.
+        outputStream = new ByteArrayOutputStream();
+        message.writeTo(outputStream);
+        RawMessage rawMessage =
+                new RawMessage(ByteBuffer.wrap(outputStream.toByteArray()));
+
+
+        SendRawEmailRequest rawEmailRequest =
+                new SendRawEmailRequest(rawMessage);
+        // Send the message.
         try {
-            System.out.println("Attempting to send an email through Amazon SES "
-                    + "using the AWS SDK for Java...");
+            System.out.println("Sending...");
 
-            // Instantiate an Amazon SES client, which will make the service
-            // call with the supplied AWS credentials.
-            AWSCredentialsProvider credentialsProvider = new AWSCredentialsProvider() {
-
-                public void refresh() {
-                }
-
-                public AWSCredentials getCredentials() {
-                    return new AWSCredentials() {
-
-                        public String getAWSSecretKey() {
-                            return "n+aK3d3AWOlmwJts7tXPXfau5rj1t6teS09u7X3s";
-                        }
-
-                        public String getAWSAccessKeyId() {
-                            return "AKIAJBT73QO3WS7TSEPQ";
-                        }
-                    };
-                }
-            };
-            AmazonSimpleEmailService client = AmazonSimpleEmailServiceClientBuilder
-                    .standard().withCredentials(credentialsProvider).withRegion(Regions.EU_WEST_1).build();
-            // Replace US_WEST_2 with the AWS Region you're using for
-            // Amazon SES.
-
-
-            // Print the raw email content on the console
-            PrintStream out = System.out;
-            message.writeTo(out);
+            // Connect to Amazon SES using the SMTP username and password you specified above.
+            transport.connect(HOST, SMTP_USERNAME, SMTP_PASSWORD);
 
             // Send the email.
-            outputStream = new ByteArrayOutputStream();
-            message.writeTo(outputStream);
-            RawMessage rawMessage =
-                    new RawMessage(ByteBuffer.wrap(outputStream.toByteArray()));
 
-
-            SendRawEmailRequest rawEmailRequest =
-                    new SendRawEmailRequest(rawMessage);
-
-            client.sendRawEmail(rawEmailRequest);
+            transport.sendMessage(message, message.getAllRecipients());
             System.out.println("Email sent!");
-            // Display an error if something goes wrong.
         } catch (Exception ex) {
-            System.out.println("Email Failed");
-            System.err.println("Error message: " + ex.getMessage());
-            ex.printStackTrace();
+            System.out.println("The email was not sent.");
+            System.out.println("Error message: " + ex.getMessage());
         } finally {
-            outputStream.close();
+            // Close and terminate the connection.
+            transport.close();
         }
     }
 
