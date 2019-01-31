@@ -32,8 +32,8 @@ public class AmazonSESExample {
 
     // Replace recipient@example.com with a "To" address. If your account
     // is still in the sandbox, this address must be verified.
-    private static String RECIPIENT_TO = "bhargava.k@capitalfloat.com";
-    private static String RECIPIENT_CC = "bhargavak37@gmail.com";
+    private static String RECIPIENT_TO = "";
+    private static String RECIPIENT_CC = "";
 
     // Specify a configuration set. If you do not want to use a configuration
     // set, comment the following variable, and the
@@ -120,11 +120,11 @@ public class AmazonSESExample {
                     return new AWSCredentials() {
 
                         public String getAWSSecretKey() {
-                            return "n+aK3d3AWOlmwJts7tXPXfau5rj1t6teS09u7X3s";
+                            return "";
                         }
 
                         public String getAWSAccessKeyId() {
-                            return "AKIAJBT73QO3WS7TSEPQ";
+                            return "";
                         }
                     };
                 }
