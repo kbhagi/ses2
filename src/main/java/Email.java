@@ -24,11 +24,11 @@ SMTP Password: BPnB6AeNJ1q21MQ2lkgDS+jykHQSK+nBzMNOQn9ngXfG*/
                     return new AWSCredentials() {
 
                         public String getAWSSecretKey() {
-                            return "n+aK3d3AWOlmwJts7tXPXfau5rj1t6teS09u7X3s";
+                            return "";
                         }
 
                         public String getAWSAccessKeyId() {
-                            return "AKIAJBT73QO3WS7TSEPQ";
+                            return "";
                         }
                     };
                 }
