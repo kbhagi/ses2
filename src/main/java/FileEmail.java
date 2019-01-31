@@ -30,8 +30,8 @@ import com.amazonaws.services.simpleemail.model.SendRawEmailRequest;
 ;
 
 public class FileEmail {
-       public static final String SENDER="bhargava.k@study42.com";
-        public static final String  []  RECIPIENT = {"bhargava.k@capitalfloat.com"};
+       public static final String SENDER="";
+        public static final String  []  RECIPIENT = {"."};
         public static final String BODY_TEXT = "Test";
         public static final String ATTACHMENT = "/home/bhargava/doc_section/dwtasks/1018695p.TXT";
     public static final String ATTACHMENT1 = "/home/bhargava/doc_section/dwtasks/1018695.TXT";
@@ -85,8 +85,8 @@ public class FileEmail {
                         RawMessage rawMessage = new RawMessage(ByteBuffer.wrap(outputStream.toByteArray()));
 
                         // Credentials
-                        String keyID = "AKIAJBT73QO3WS7TSEPQ";// <your key id>
-                        String secretKey = "n+aK3d3AWOlmwJts7tXPXfau5rj1t6teS09u7X3s";// <your secret key>
+                        String keyID = "";// <your key id>
+                        String secretKey = "";// <your secret key>
                         AWSCredentials credentials = new BasicAWSCredentials(keyID, secretKey);
                         AmazonSimpleEmailServiceClient client = new AmazonSimpleEmailServiceClient(credentials);
                         client.setRegion(Region.getRegion(Regions.EU_WEST_1));
