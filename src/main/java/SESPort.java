@@ -9,18 +9,18 @@ public class SESPort {
 
     // Replace sender@example.com with your "From" address.
     // This address must be verified.
-    static final String FROM = "admin@capitalfloat.com";
-    static final String FROMNAME = "Capital Float";
+    static final String FROM = "";
+    static final String FROMNAME = " ";
 
     // Replace recipient@example.com with a "To" address. If your account
     // is still in the sandbox, this address must be verified.
-    static final String TO = "bhargava.k@capitalfloat.com";
+    static final String TO = ".com";
 
     // Replace smtp_username with your Amazon SES SMTP user name.
-    static final String SMTP_USERNAME = "AKIAJ53XE6UORIIJ45GQ";
+    static final String SMTP_USERNAME = "";
 
     // Replace smtp_password with your Amazon SES SMTP password.
-    static final String SMTP_PASSWORD = "AgCtlPa5souHnHQc9j548UPJGke0mcgfiKp1x4GwlWkw";
+    static final String SMTP_PASSWORD = "";
 
     // The name of the Configuration Set to use for this message.
     // If you comment out or remove this variable, you will also need to
@@ -30,7 +30,7 @@ public class SESPort {
     // Amazon SES SMTP host name. This example uses the US West (Oregon) region.
     // See https://docs.aws.amazon.com/ses/latest/DeveloperGuide/regions.html#region-endpoints
     // for more information.
-    static final String HOST = "email-smtp.us-west-2.amazonaws.com";
+    static final String HOST = "email-smtp.us-west-.com";
 
     // The port you will connect to on the Amazon SES SMTP endpoint.
     static final int PORT = 587;
