@@ -11,8 +11,7 @@ import com.amazonaws.regions.Regions;
 
     public class Email {
 
-/*SMTP Username:AKIAJOZYT3L565ND6XVQ
-SMTP Password: BPnB6AeNJ1q21MQ2lkgDS+jykHQSK+nBzMNOQn9ngXfG*/
+
 
 
         public static void main(String[] args) {
@@ -39,7 +38,7 @@ SMTP Password: BPnB6AeNJ1q21MQ2lkgDS+jykHQSK+nBzMNOQn9ngXfG*/
 
 
             SendEmailRequest request = new SendEmailRequest()
-                    .withDestination(new Destination().withToAddresses("bhargava.k@capitalfloat.com"))
+                    .withDestination(new Destination().withToAddresses(""))
                     .withMessage(new Message()
                             .withBody(new Body()
                                     .withHtml(new Content()
@@ -48,7 +47,7 @@ SMTP Password: BPnB6AeNJ1q21MQ2lkgDS+jykHQSK+nBzMNOQn9ngXfG*/
                                             .withCharset("UTF-8").withData("Hello world 2")))
                             .withSubject(new Content()
                                     .withCharset("UTF-8").withData("Hello World")))
-                    .withSource("bhargava.k@study42.com");
+                    .withSource("");
 
             client.sendEmail(request);
         }
